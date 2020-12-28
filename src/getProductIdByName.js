@@ -8,6 +8,8 @@ async function getProductIdByName(productname) {
 	const aliExpressData = await page.evaluate(() => runParams);
 	const items = aliExpressData.items;
 
+	await browser.close();
+
 	if (items && Array.isArray(items) && items.length) {
 		const topItem = items[0];
 		const id = topItem.productId;

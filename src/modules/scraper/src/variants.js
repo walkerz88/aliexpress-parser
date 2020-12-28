@@ -7,14 +7,14 @@ module.exports = {
       return {
         id: list.skuPropertyId,
         name: list.skuPropertyName,
-        values: list.skuPropertyValues.map(val => {
+        values: list.skuPropertyValues ? list.skuPropertyValues.map(val => {
           return {
             id: val.propertyValueId,
             name: val.propertyValueName,
             displayName: val.propertyValueDisplayName,
             image: val.skuPropertyImagePath
           };
-        })
+        }) : null
       };
     });
 
@@ -22,9 +22,9 @@ module.exports = {
       return {
         skuId: list.skuId,
         optionValueIds: list.skuPropIds,
-        availableQuantity: list.skuVal.availQuantity,
-        originalPrice: list.skuVal.skuAmount.value,
-        salePrice: list.skuVal.skuActivityAmount.value
+        availableQuantity: list.skuVal ? list.skuVal.availQuantity : null,
+        originalPrice: list.skuVal && list.skuVal.skuAmount ? list.skuVal.skuAmount.value : null,
+        salePrice: list.skuVal && list.skuVal.skuActivityAmount ? list.skuVal.skuActivityAmount.value : null
       };
     });
 

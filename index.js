@@ -93,14 +93,25 @@ const prompts = require('prompts');
 							}
 						}
 					}
-
+				} else {
+					console.log('');
+					console.log('\x1b[36m%s\x1b[0m', 'No feedbacks received for this product.');
 				}
 
+				printFooter (product.title);
+
+			} else {
 				console.log('');
-				console.log('---^-----------');
-				console.log(product.title);
-				console.log('');
-			} 
+				console.log('\x1b[36m%s\x1b[0m', 'No feedbacks received for this product.');
+				printFooter (product.title);
+			}
+		}
+
+		function printFooter (text) {
+			console.log('');
+			console.log('---^-----------');
+			console.log(text);
+			console.log('');
 		}
 
 		function getProductById (id) {
@@ -110,7 +121,6 @@ const prompts = require('prompts');
 				console.log('Fetching product data, please wait...');
 				
 				product.then(res => {
-					console.log('product.then')
 					resolve(res);
 				});
 			})
