@@ -142,9 +142,9 @@ function printFooter (text) {
 
 function getProductById (id) {
 	return new Promise(resolve => {
-
-		const product = scraper(id);
 		console.log('Fetching product data, please wait...');
+		
+		const product = scraper(id);
 		
 		product.then(res => {
 			resolve(res);
