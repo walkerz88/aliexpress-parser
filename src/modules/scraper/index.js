@@ -30,60 +30,80 @@ async function scraper(productId, feedbackLimit) {
   const adminAccountId = await page.evaluate(() => adminAccountId);
   await browser.close();
 
-  let feedbackData = [];
+  /** Build the JSON response with aliexpress product details */
 
-  if (data.titleModule.feedbackRating.totalValidNum > 0) {
-    feedbackData = await Feedback.get(
-      data.actionModule.productId,
-      adminAccountId,
-      data.titleModule.feedbackRating.totalValidNum,
-      FEEDBACK_LIMIT
-    );
+  let json = {
+    description: descriptionData,
+    images: data.imageModule && data.imageModule.imagePathList || [],
+    variants: data.skuModule ? Variants.get(data.skuModule) : null,
+    specs: data.specsModule ? data.specsModule.props : null,
+    currency: data.webEnv ? data.webEnv.currency : null
+  };
+
+  if (data.titleModule) {
+    json.title = data.titleModule.subject;
+    json.orders = data.titleModule.tradeCount;
+
+    if (data.titleModule.feedbackRating) {
+      json.ratings = {
+        averageStar: data.titleModule.feedbackRating.averageStar,
+        totalStartCount: data.titleModule.feedbackRating.totalValidNum,
+        fiveStarCount: data.titleModule.feedbackRating.fiveStarNum,
+        fourStarCount: data.titleModule.feedbackRating.fourStarNum,
+        threeStarCount: data.titleModule.feedbackRating.threeStarNum,
+        twoStarCount: data.titleModule.feedbackRating.twoStarNum,
+        oneStarCount: data.titleModule.feedbackRating.oneStarNum
+      }
+
+      /** Fetching reviews */
+      if (data.titleModule.feedbackRating.totalValidNum > 0) {
+        const feedbackData = await Feedback.get(
+          data.actionModule.productId,
+          adminAccountId,
+          data.titleModule.feedbackRating.totalValidNum,
+          FEEDBACK_LIMIT
+        );
+        json.feedback = feedbackData;
+      }
+    }
   }
 
-  /** Build the JSON response with aliexpress product details */
-  const json = {
-    title: data.titleModule.subject,
-    categoryId: data.actionModule.categoryId,
-    productId: data.actionModule.productId,
-    totalAvailableQuantity: data.quantityModule.totalAvailQuantity,
-    description: descriptionData,
-    orders: data.titleModule.tradeCount,
-    storeInfo: {
+  if (data.actionModule) {
+    json.categoryId = data.actionModule.categoryId;
+    json.productId = data.actionModule.productId;
+  }
+
+  if (data.quantityModule) {
+    json.totalAvailableQuantity = data.quantityModule.totalAvailQuantity;
+  }
+
+  if (data.storeModule) {
+    json.storeInfo = {
       name: data.storeModule.storeName,
       companyId: data.storeModule.companyId,
       storeNumber: data.storeModule.storeNum,
       followers: data.storeModule.followingNumber,
       ratingCount: data.storeModule.positiveNum,
       rating: data.storeModule.positiveRate
-    },
-    ratings: {
-      totalStar: 5,
-      averageStar: data.titleModule.feedbackRating.averageStar,
-      totalStartCount: data.titleModule.feedbackRating.totalValidNum,
-      fiveStarCount: data.titleModule.feedbackRating.fiveStarNum,
-      fourStarCount: data.titleModule.feedbackRating.fourStarNum,
-      threeStarCount: data.titleModule.feedbackRating.threeStarNum,
-      twoStarCount: data.titleModule.feedbackRating.twoStarNum,
-      oneStarCount: data.titleModule.feedbackRating.oneStarNum
-    },
-    images:
-      (data.imageModule &&
-        data.imageModule.imagePathList) ||
-      [],
-    feedback: feedbackData,
-    variants: Variants.get(data.skuModule),
-    specs: data.specsModule.props,
-    currency: data.webEnv.currency,
-    originalPrice: {
-      min: data.priceModule.minAmount.value,
-      max: data.priceModule.maxAmount.value
-    },
-    salePrice: {
-      min: data.priceModule.minActivityAmount.value,
-      max: data.priceModule.maxActivityAmount.value
     }
-  };
+  }
+
+  if (data.priceModule) {
+    if (data.priceModule.minActivityAmount && data.priceModule.maxActivityAmount) {
+      json.salePrice = {
+        min: data.priceModule.minActivityAmount.value,
+        max: data.priceModule.maxActivityAmount.value
+      }
+    }
+
+    if (data.priceModule.minAmount && data.priceModule.maxAmount) {
+      json.originalPrice = {
+        min: data.priceModule.minAmount.value,
+        max: data.priceModule.maxAmount.value
+      }
+    }
+
+  }
 
   return json;
 }

@@ -1,26 +1,68 @@
 const scraper = require('./src/modules/scraper');
-const stdio = require('stdio');
+const getProductIdByName = require('./src/getProductIdByName');
 const prompts = require('prompts');
 
 (async () => {
-		let productId = await prompts({
-			type: 'number',
+		let searchType = await prompts({
+			type: 'select',
 			name: 'value',
-			message: 'Product ID:',
-			validate: value => value ? true : 'Please, enter ID of the product.'
+			message: 'Search product by:',
+			choices: [
+				{ title: 'id', value: 'id' },
+				{ title: 'name', value: 'name' }
+			],
+			initial: 0
 		});
 
-		productId = productId.value;
+		searchType = searchType.value;
 
-		if (!productId) {
+		if (!searchType) {
 			return;
 		}
 
-		const product = scraper(productId);
-		console.log('Fetching product data, please wait...');
-		
-		product.then(res => {
-			const feedback = res.feedback;
+		if (searchType === 'id') {
+			let productId = await prompts({
+				type: 'number',
+				name: 'value',
+				message: 'Product ID:',
+				validate: value => value ? true : 'Please, enter ID of the product.'
+			});
+	
+			productId = productId.value;
+	
+			if (!productId) {
+				return;
+			}
+
+			getProductById(productId).then(res => {
+				printResults(res);
+			});
+		} else if (searchType === 'name') {
+			let productName = await prompts({
+				type: 'text',
+				name: 'value',
+				message: 'Product name: ',
+				validate: value => value ? true : 'Please, enter product name.'
+			});
+
+			productName = productName.value;
+
+			if (!productName) {
+				return;
+			}
+
+			getProductIdByName(productName).then(id => {
+				if (id) {
+					console.log(`Product id: ${id}`)
+					getProductById(id).then((res) => {
+						printResults(res);
+					});
+				}
+			});
+		}
+
+		function printResults (product) {
+			const feedback = product.feedback;
 			if (feedback && Array.isArray(feedback) && feedback.length) {
 				let array = feedback.filter(item => item.content);
 				if (array.length) {
@@ -56,8 +98,21 @@ const prompts = require('prompts');
 
 				console.log('');
 				console.log('---^-----------');
-				console.log(res.title);
+				console.log(product.title);
 				console.log('');
-			}
-		});
+			} 
+		}
+
+		function getProductById (id) {
+			return new Promise(resolve => {
+
+				const product = scraper(id);
+				console.log('Fetching product data, please wait...');
+				
+				product.then(res => {
+					console.log('product.then')
+					resolve(res);
+				});
+			})
+		}
 })();
