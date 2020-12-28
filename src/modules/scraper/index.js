@@ -10,15 +10,12 @@ async function scraper(productId, feedbackLimit) {
   const page = await browser.newPage();
 
   /** Scrape the aliexpress product page for details */
-  console.log('Fetching product data, please wait...');
 
   await page.goto(`https://www.aliexpress.com/item/${productId}.html`);
 
   const aliExpressData = await page.evaluate(() => runParams);
 
   const data = aliExpressData.data;
-
-  console.log('Product data received.');
 
   /** Scrape the description page for the product using the description url */
   const descriptionUrl = data.descriptionModule.descriptionUrl;
@@ -36,7 +33,6 @@ async function scraper(productId, feedbackLimit) {
   let feedbackData = [];
 
   if (data.titleModule.feedbackRating.totalValidNum > 0) {
-    console.log('Fetching product reviews, please wait...');
     feedbackData = await Feedback.get(
       data.actionModule.productId,
       adminAccountId,

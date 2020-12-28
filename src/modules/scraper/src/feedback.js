@@ -82,23 +82,37 @@ module.exports = {
   get: async function(productId, ownerMemberId, count, limit, translate = 'N') {
     let allFeedbacks = [];
     let totalPages = Math.ceil(count / limit);
+    const printProgress = value => {
+      process.stdout.write("\r\x1b[K");
+      process.stdout.write(`Progress: ${value}%`);
+    }
+
+    if (!totalPages) {
+      return allFeedbacks;
+    }
 
     /** If totalPages are greater than 10, i.e. if reviews are > 100, limit it to 100 or 10 pages */
     if (totalPages > 10) {
       totalPages = 10;
     }
 
-    console.log(`Total pages: ${totalPages}`);
+    let progress = 0;
+    const percent = Math.ceil(100 / totalPages);
 
     for (let currentPage = 1; currentPage <= totalPages; currentPage++) {
-      console.log(`Fetching reviews page №${currentPage}`);
+      printProgress(progress);
+
+      progress += percent;
       const feedbackUrl = `https://feedback.aliexpress.com/display/productEvaluation.htm?v=2&page=${currentPage}&currentPage=${currentPage}&productId=${productId}&ownerMemberId=${ownerMemberId}&translate=${translate}`;
       const feedbackResponse = await fetch(feedbackUrl);
       const feedbackHtml = await feedbackResponse.text();
-
       const data = getFeedbackData(feedbackHtml);
+
       allFeedbacks = [...allFeedbacks, ...data];
     }
+
+    printProgress(100);
+    console.log('');
 
     return allFeedbacks;
   }
