@@ -34,9 +34,16 @@ const initTool = async () => {
 			return;
 		}
 
-		getProductById(productId).then(res => {
-			printResults(res);
-		});
+		try {
+			getProductById(productId).then(res => {
+				printResults(res);
+			});
+		} catch (e) {
+			console.log('');
+			console.log('\x1b[36m%s\x1b[0m', e);
+			console.log('');
+			finish();
+		}
 	} else if (searchType === 'name') {
 		let productName = await prompts({
 			type: 'text',
@@ -51,14 +58,26 @@ const initTool = async () => {
 			return;
 		}
 
-		getProductIdByName(productName).then(id => {
-			if (id) {
-				console.log(`Product id: ${id}`)
-				getProductById(id).then((res) => {
-					printResults(res);
-				});
-			}
-		});
+		try {
+			getProductIdByName(productName).then(id => {
+				if (id) {
+					console.log(`Product id: ${id}`)
+					getProductById(id).then((res) => {
+						printResults(res);
+					});
+				} else {
+					console.log('');
+					console.log('\x1b[36m%s\x1b[0m', 'No items found.');
+					console.log('');
+					finish();
+				}
+			});
+		} catch(e) {
+			console.log('');
+			console.log('\x1b[36m%s\x1b[0m', e);
+			console.log('');
+			finish();
+		}
 	}
 }
 

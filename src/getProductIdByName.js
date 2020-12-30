@@ -16,8 +16,8 @@ async function getProductIdByName(productname) {
 		const choices = topItems.map(item => {
 			let title = item.title;
 
-			if (title.length > 48) { 
-				title = `${title.slice(0, 48)}...`;
+			if (title.length > 64) { 
+				title = `${title.slice(0, 64)}...`;
 			}
 			
 			return {
@@ -38,7 +38,7 @@ async function getProductIdByName(productname) {
 
 		return selectedItemId;
 	} else {
-		throw new Error('No items found.');
+		return null;
 	}
 
 }
