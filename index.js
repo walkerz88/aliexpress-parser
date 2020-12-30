@@ -1,6 +1,7 @@
 const scraper = require('./src/modules/scraper');
 const getProductIdByName = require('./src/getProductIdByName');
 const prompts = require('prompts');
+const config = require('./config');
 
 const initTool = async () => {
 	let searchType = await prompts({
@@ -83,50 +84,109 @@ const initTool = async () => {
 
 initTool();
 
+function groupResults (array) {
+	let results = {};
+	switch (config.groupBy) {
+		case 'language':
+			array.forEach(item => {
+				const country = item.country;
+				if (country) {
+					if (results[country]) {
+						results[country].push(item);
+					} else {
+						results[country] = [item];
+					}
+				}
+			});
+
+			let keys = Object.keys(results);
+
+			if (keys.length) {
+				let sortedKeys = keys.sort(a => a === 'RU' ? 1 : -1);
+				console.log(sortedKeys);
+				let sortedResults = {};
+
+				sortedKeys.forEach(key => {
+					sortedResults[key] = results[key];
+				});
+
+				results = sortedResults;
+			}
+
+			for (let key in results) {
+				let feedbacks = results[key];
+				feedbacks = feedbacks.sort((a, b) => a.content.length - b.content.length);
+			}
+
+			break;
+		case 'rating':
+			for (let i = 1; i <= 5; i++) {
+				let starsArray = array.filter(item => item.rating === i);
+				starsArray = array.map(item => {
+					return {
+						name: item.displayName || null,
+						country: item.country || null,
+						content: item.content
+					}
+				});
+				results[`Rating: ${i}`] = starsArray;
+			}
+			break;
+		default:
+			array = array.sort((a, b) => a.content.length - b.content.length);
+			array = array.sort(a => a.country === 'RU' ? 1 : -1);
+			results = {'Reviews:': array}
+	}
+	return results;
+}
+
 function printResults (product) {
-	const feedback = product.feedback;
-	if (feedback && Array.isArray(feedback) && feedback.length) {
-		let array = feedback.filter(item => item.content);
-		if (array.length) {
-			array = array.map(item => {
+	let feedbacks = product.feedback;
+	if (feedbacks && Array.isArray(feedbacks) && feedbacks.length) {
+		feedbacks = feedbacks.filter(item => item.content);
+		if (feedbacks.length) {
+			feedbacks = feedbacks.map(item => {
 				return {
 					rating: item.rating,
+					name: item.displayName || null,
+					country: item.country || null,
 					content: item.content
 				}
 			});
 
-			let results = {};
-
-			for (let i = 1; i <= 5; i++) {
-				let starsArray = array.filter(item => item.rating === i);
-				results[i] = starsArray;
-			}
+			let results = groupResults(feedbacks);
 
 			if (Object.keys(results).length) {
 
 				for (key in results) {
-					let reviews = results[key];
+					let feedbacks = results[key];
 
-					if (reviews && Array.isArray(reviews) && reviews.length) {
-						console.log('');
-						console.log(`Оценка: ${key}`);
-						reviews = reviews.map(item => item.content);
-						console.log(reviews);
+					if (feedbacks && Array.isArray(feedbacks) && feedbacks.length) {
+						feedbacks = feedbacks.filter(item => item.content && item.content.length >= (config.reviewMinLength || 0));
+						if (feedbacks && feedbacks.length) {
+							console.log('');
+							console.log('-----');
+							console.log(key);
+							console.log(feedbacks);
+						}
 					}
 				}
+			} else {
+				console.log('');
+				console.log('\x1b[36m%s\x1b[0m', `Can't combine results.`);
 			}
 		} else {
 			console.log('');
 			console.log('\x1b[36m%s\x1b[0m', 'No feedbacks received for this product.');
 		}
 
-		printFooter (product.title);
+		printFooter (`${product.productId} ${product.title}`);
 		finish();
 
 	} else {
 		console.log('');
 		console.log('\x1b[36m%s\x1b[0m', 'No feedbacks received for this product.');
-		printFooter (product.title);
+		printFooter (`${product.productId} ${product.title}`);
 		finish();
 	}
 }
