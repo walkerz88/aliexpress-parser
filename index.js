@@ -64,6 +64,8 @@ const initTool = async () => {
 			return;
 		}
 
+		console.log(languages[config.language].SEARCH_BY_NAME_IN_PROGRESS);
+		
 		try {
 			getProductIdByName(productName).then(id => {
 				if (id) {
