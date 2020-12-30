@@ -1,19 +1,21 @@
 const scraper = require('./src/modules/scraper');
-const getProductIdByName = require('./src/getProductIdByName');
+const getProductIdByName = require('./src/helpers/getProductIdByName');
 const prompts = require('prompts');
 let config = require('./config');
+const languages = require('./src/dictionaries/languages.js');
 
 config.sortLanguage = config.sortLanguage || 'RU';
 config.feedbackMinLength = config.feedbackMinLength || 0;
+config.language = config.language || 'RU';
 
 const initTool = async () => {
 	let searchType = await prompts({
 		type: 'select',
 		name: 'value',
-		message: 'Search product by:',
+		message: languages[config.language].SEARCH_BY,
 		choices: [
-			{ title: 'id', value: 'id' },
-			{ title: 'name', value: 'name' }
+			{ title: languages[config.language].SEARCH_BY_ID, value: 'id' },
+			{ title: languages[config.language].SEARCH_BY_NAME, value: 'name' }
 		],
 		initial: 0
 	});
@@ -28,8 +30,8 @@ const initTool = async () => {
 		let productId = await prompts({
 			type: 'number',
 			name: 'value',
-			message: 'Product ID:',
-			validate: value => value ? true : 'Please, enter ID of the product.'
+			message: `${languages[config.language].PRODUCT_ID} `,
+			validate: value => value ? true : languages[config.language].ENTER_PRODUCT_ID_ERROR
 		});
 
 		productId = productId.value;
@@ -52,8 +54,8 @@ const initTool = async () => {
 		let productName = await prompts({
 			type: 'text',
 			name: 'value',
-			message: 'Product name: ',
-			validate: value => value ? true : 'Please, enter product name.'
+			message: `${languages[config.language].PRODUCT_NAME} `,
+			validate: value => value ? true : languages[config.language].ENTER_PRODUCT_NAME_ERROR
 		});
 
 		productName = productName.value;
@@ -65,13 +67,13 @@ const initTool = async () => {
 		try {
 			getProductIdByName(productName).then(id => {
 				if (id) {
-					console.log(`Product id: ${id}`)
+					console.log(`${languages[config.language].PRODUCT_ID} ${id}`)
 					getProductById(id).then((res) => {
 						printResults(res);
 					});
 				} else {
 					console.log('');
-					console.log('\x1b[36m%s\x1b[0m', 'No items found.');
+					console.log('\x1b[36m%s\x1b[0m', languages[config.language].NO_ITEMS_FOUND);
 					console.log('');
 					finish();
 				}
@@ -106,7 +108,6 @@ function groupResults (array) {
 
 			if (keys.length) {
 				let sortedKeys = keys.sort(a => a === config.sortLanguage ? 1 : -1);
-				console.log(sortedKeys);
 				let sortedResults = {};
 
 				sortedKeys.forEach(key => {
@@ -168,7 +169,6 @@ function printResults (product) {
 						feedbacks = feedbacks.filter(item => item.content && item.content.length >= config.feedbackMinLength);
 						if (feedbacks && feedbacks.length) {
 							console.log('');
-							console.log('-----');
 							console.log(key);
 							console.log(feedbacks);
 						}
@@ -176,11 +176,11 @@ function printResults (product) {
 				}
 			} else {
 				console.log('');
-				console.log('\x1b[36m%s\x1b[0m', `Can't combine results.`);
+				console.log('\x1b[36m%s\x1b[0m', languages[config.language].CANT_COMBINE_RESULTS);
 			}
 		} else {
 			console.log('');
-			console.log('\x1b[36m%s\x1b[0m', 'No feedbacks received for this product.');
+			console.log('\x1b[36m%s\x1b[0m', languages[config.language].NO_FEEDBACKS);
 		}
 
 		printFooter (`${product.productId} ${product.title}`);
@@ -188,7 +188,7 @@ function printResults (product) {
 
 	} else {
 		console.log('');
-		console.log('\x1b[36m%s\x1b[0m', 'No feedbacks received for this product.');
+		console.log('\x1b[36m%s\x1b[0m', languages[config.language].NO_FEEDBACKS);
 		printFooter (`${product.productId} ${product.title}`);
 		finish();
 	}
@@ -198,10 +198,10 @@ async function finish () {
 	let finishType = await prompts({
 		type: 'select',
 		name: 'value',
-		message: 'Get another product?',
+		message: languages[config.language].FINISH_QUESTION,
 		choices: [
-			{ title: 'yes', value: true },
-			{ title: 'no', value: false }
+			{ title: languages[config.language].FINISH_QUESTION_YES, value: true },
+			{ title: languages[config.language].FINISH_QUESTION_NO, value: false }
 		],
 		initial: 0
 	});
@@ -224,7 +224,7 @@ function printFooter (text) {
 
 function getProductById (id) {
 	return new Promise(resolve => {
-		console.log('Fetching product data, please wait...');
+		console.log(languages[config.language].FETCHING_IN_PROGRESS);
 		
 		const product = scraper(id);
 		
