@@ -1,5 +1,11 @@
 const puppeteer = require('puppeteer');
 const prompts = require('prompts');
+let config = require('../../config');
+const languages = require('../dictionaries/languages.js');
+
+config.language = config.language || 'RU';
+config.searchByNameMaxResults = config.searchByNameMaxResults || 5;
+config.searchByNameResultsLength = config.searchByNameResultsLength || 64;
 
 async function getProductIdByName(productname) {
 	const browser = await puppeteer.launch();
@@ -12,12 +18,12 @@ async function getProductIdByName(productname) {
 	await browser.close();
 
 	if (items && Array.isArray(items) && items.length) {
-		const topItems = items.splice(0, 5);
+		const topItems = items.splice(0, config.searchByNameMaxResults);
 		const choices = topItems.map(item => {
 			let title = item.title;
 
-			if (title.length > 64) { 
-				title = `${title.slice(0, 64)}...`;
+			if (title.length > config.searchByNameResultsLength) { 
+				title = title.slice(0, config.searchByNameResultsLength);
 			}
 			
 			return {
@@ -29,7 +35,7 @@ async function getProductIdByName(productname) {
 		let selectedItemId = await prompts({
 			type: 'select',
 			name: 'value',
-			message: 'Select your product:',
+			message: languages[config.language].SELECT_PRODUCT,
 			choices,
 			initial: 0
 		});

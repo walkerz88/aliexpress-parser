@@ -13,7 +13,8 @@ module.exports = {
         ENTER_PRODUCT_NAME_ERROR: 'Пожалуйста, укажите название товара.',
         FINISH_QUESTION: 'Получить данные по другому товару?',
         FINISH_QUESTION_YES: 'Да',
-        FINISH_QUESTION_NO: 'Нет'
+        FINISH_QUESTION_NO: 'Нет',
+        SELECT_PRODUCT: 'Выберите товар:'
     },
     'EN': {
         PRODUCT_ID: 'Product id:',
@@ -29,6 +30,7 @@ module.exports = {
         ENTER_PRODUCT_NAME_ERROR: 'Please, enter product name.',
         FINISH_QUESTION: 'Get another product?',
         FINISH_QUESTION_YES: 'yes',
-        FINISH_QUESTION_NO: 'no'
+        FINISH_QUESTION_NO: 'no',
+        SELECT_PRODUCT: 'Select your product:'
     }
 }

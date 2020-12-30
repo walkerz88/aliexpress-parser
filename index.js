@@ -30,7 +30,7 @@ const initTool = async () => {
 		let productId = await prompts({
 			type: 'number',
 			name: 'value',
-			message: `${languages[config.language].PRODUCT_ID} `,
+			message: languages[config.language].PRODUCT_ID,
 			validate: value => value ? true : languages[config.language].ENTER_PRODUCT_ID_ERROR
 		});
 
@@ -54,7 +54,7 @@ const initTool = async () => {
 		let productName = await prompts({
 			type: 'text',
 			name: 'value',
-			message: `${languages[config.language].PRODUCT_NAME} `,
+			message: languages[config.language].PRODUCT_NAME,
 			validate: value => value ? true : languages[config.language].ENTER_PRODUCT_NAME_ERROR
 		});
 
