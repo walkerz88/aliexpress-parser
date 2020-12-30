@@ -1,7 +1,10 @@
 const scraper = require('./src/modules/scraper');
 const getProductIdByName = require('./src/getProductIdByName');
 const prompts = require('prompts');
-const config = require('./config');
+let config = require('./config');
+
+config.sortLanguage = config.sortLanguage || 'RU';
+config.feedbackMinLength = config.feedbackMinLength || 0;
 
 const initTool = async () => {
 	let searchType = await prompts({
@@ -102,7 +105,7 @@ function groupResults (array) {
 			let keys = Object.keys(results);
 
 			if (keys.length) {
-				let sortedKeys = keys.sort(a => a === 'RU' ? 1 : -1);
+				let sortedKeys = keys.sort(a => a === config.sortLanguage ? 1 : -1);
 				console.log(sortedKeys);
 				let sortedResults = {};
 
@@ -134,8 +137,8 @@ function groupResults (array) {
 			break;
 		default:
 			array = array.sort((a, b) => a.content.length - b.content.length);
-			array = array.sort(a => a.country === 'RU' ? 1 : -1);
-			results = {'Reviews:': array}
+			array = array.sort(a => a.country === config.sortLanguage ? 1 : -1);
+			results = {'Feedbacks:': array}
 	}
 	return results;
 }
@@ -162,7 +165,7 @@ function printResults (product) {
 					let feedbacks = results[key];
 
 					if (feedbacks && Array.isArray(feedbacks) && feedbacks.length) {
-						feedbacks = feedbacks.filter(item => item.content && item.content.length >= (config.reviewMinLength || 0));
+						feedbacks = feedbacks.filter(item => item.content && item.content.length >= config.feedbackMinLength);
 						if (feedbacks && feedbacks.length) {
 							console.log('');
 							console.log('-----');
