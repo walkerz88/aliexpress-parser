@@ -163,6 +163,7 @@ function printResults (product) {
 			let results = groupResults(feedbacks);
 
 			if (Object.keys(results).length) {
+				let emptyFeedbacks = 0;
 
 				for (key in results) {
 					let feedbacks = results[key];
@@ -173,8 +174,15 @@ function printResults (product) {
 							console.log('');
 							console.log(key);
 							console.log(feedbacks);
+						} else {
+							emptyFeedbacks += 1;
 						}
 					}
+				}
+
+				if (emptyFeedbacks && emptyFeedbacks === Object.keys(results).length) {
+					console.log('');
+					printByColor('cyan', languages[config.language].NO_MATCHING_FEEDBACKS);
 				}
 			} else {
 				console.log('');

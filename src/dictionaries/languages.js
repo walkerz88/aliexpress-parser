@@ -1,3 +1,7 @@
+const config = require('../../config.js');
+
+config.feedbackMinLength = config.feedbackMinLength || 25;
+
 module.exports = {
     'RU': {
         PRODUCT_ID: 'ID товара:',
@@ -5,6 +9,7 @@ module.exports = {
         NO_ITEMS_FOUND: 'Товаров не найдено.',
         CANT_COMBINE_RESULTS: 'Не могу сгруппировать результаты',
         NO_FEEDBACKS: 'У товара нет отзывов.',
+        NO_MATCHING_FEEDBACKS: `У товара нет отзывов, подходящих под критерии: Не пустой, Мин. длинна = ${config.feedbackMinLength}`,
         FETCHING_IN_PROGRESS: 'Получаем данные о товаре, пожалуйста, подождите...',
         SEARCH_BY_NAME_IN_PROGRESS: 'Ищем товары по названию, пожалуйста, подождите...',
         SEARCH_BY: 'Поиск товара по:',
@@ -23,6 +28,7 @@ module.exports = {
         NO_ITEMS_FOUND: 'No items found.',
         CANT_COMBINE_RESULTS: 'Can\'t combine results.',
         NO_FEEDBACKS: 'No feedbacks received for this product.',
+        NO_MATCHING_FEEDBACKS: `No feedbacks satisfying the request: Not empty, Min. length = ${config.feedbackMinLength}`,
         FETCHING_IN_PROGRESS: 'Fetching product data, please wait...',
         SEARCH_BY_NAME_IN_PROGRESS: 'Searching products by name, please wait...',
         SEARCH_BY: 'Search product by:',
