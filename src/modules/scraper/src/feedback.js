@@ -1,6 +1,9 @@
 const fetch = require('node-fetch');
 const cheerio = require('cheerio');
 const faker = require('faker');
+let config = require('../../../../config');
+
+config.feedbackPages = config.feedbackPages || 10;
 
 const getFeedbackData = feedbackHtml => {
   const $ = cheerio.load(feedbackHtml);
@@ -79,12 +82,18 @@ const getFeedbackData = feedbackHtml => {
 };
 
 module.exports = {
-  get: async function(productId, ownerMemberId, count, limit, translate = 'N') {
+  get: async function(productId, ownerMemberId, count) {
     let allFeedbacks = [];
+    let limit = config.feedbacksLimit || 10;
     let totalPages = Math.ceil(count / limit);
     const printProgress = value => {
       process.stdout.write("\r\x1b[K");
       process.stdout.write(`Progress: ${value}%`);
+    }
+    let translate = 'N';
+
+    if (config.translate) {
+      translate = 'Y'
     }
 
     if (!totalPages) {
@@ -92,8 +101,8 @@ module.exports = {
     }
 
     /** If totalPages are greater than 10, i.e. if reviews are > 100, limit it to 100 or 10 pages */
-    if (totalPages > 10) {
-      totalPages = 10;
+    if (totalPages > config.feedbackPages) {
+      totalPages = config.feedbackPages;
     }
 
     let progress = 0;

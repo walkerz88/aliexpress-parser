@@ -4,8 +4,7 @@ const cheerio = require('cheerio');
 const Variants = require('./src/variants');
 const Feedback = require('./src/feedback');
 
-async function scraper(productId, feedbackLimit) {
-  const FEEDBACK_LIMIT = feedbackLimit || 10;
+async function scraper(productId) {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
 
@@ -31,7 +30,6 @@ async function scraper(productId, feedbackLimit) {
   await browser.close();
 
   /** Build the JSON response with aliexpress product details */
-
   let json = {
     description: descriptionData,
     images: data.imageModule && data.imageModule.imagePathList || [],
@@ -60,8 +58,7 @@ async function scraper(productId, feedbackLimit) {
         const feedbackData = await Feedback.get(
           data.actionModule.productId,
           adminAccountId,
-          data.titleModule.feedbackRating.totalValidNum,
-          FEEDBACK_LIMIT
+          data.titleModule.feedbackRating.totalValidNum
         );
         json.feedback = feedbackData;
       }
