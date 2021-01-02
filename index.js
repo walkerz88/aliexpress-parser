@@ -1,10 +1,21 @@
 const prompts = require('prompts');
+const printByColor = require('./src/helpers/printByColor');
+let config = null;
+
+try {
+	config = require('./config');
+} catch (e) {
+	printByColor('bgRed', 'No config.js found.\n');
+	console.log('Please run:');
+	printByColor('cyan', '$ npm run init');
+	console.log('or just rename example_config.js to config.js\n');
+	return;
+}
+
 const getProductById = require('./src/modules/getProductById');
 const getProductIdByName = require('./src/modules/getProductIdByName');
 const printResults = require('./src/helpers/printResults');
-const printByColor = require('./src/helpers/printByColor');
 const languages = require('./src/dictionaries/languages.js');
-let config = require('./config');
 
 config.sortLanguage = config.sortLanguage || 'RU';
 config.feedbackMinLength = config.feedbackMinLength || 0;
