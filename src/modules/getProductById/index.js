@@ -65,7 +65,7 @@ async function getProductById(productId) {
               adminAccountId,
               data.titleModule.feedbackRating.totalValidNum
             );
-            json.feedback = feedbackData;
+            json.feedbacks = feedbackData;
           }
         }
       }

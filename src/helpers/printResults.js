@@ -1,12 +1,39 @@
 const groupResults = require('./groupResults');
 const printByColor = require('./printByColor');
-const config = require('../../config');
+let config = require('../../config');
 const languages = require('../dictionaries/languages');
 
 config.language = config.language || 'RU';
+config.infoToShow = config.infoToShow || [
+	'feedbacks',
+	'id',
+	'title'
+];
 
 function printResults (product) {
-	let feedbacks = product.feedback;
+	const arrayToShow = config.infoToShow;
+	if (arrayToShow && Array.isArray(arrayToShow) && arrayToShow.length) {
+		arrayToShow.forEach(key => {
+			if (product[key]) {
+				if (key === 'feedbacks') {
+					console.log('----------');
+					printFeedbacks(product[key]);
+					console.log('');
+				} else {
+					console.log('----------');
+					printByColor('cyan', key);
+					console.log(product[key]);
+					console.log('');
+				}
+			}
+		});
+		console.log('');
+	} else {
+		printByColor('cyan', languages[config.language].NO_INFOTOSHOW_ERROR);
+	}
+}
+
+function printFeedbacks (feedbacks) {
 	if (feedbacks && Array.isArray(feedbacks) && feedbacks.length) {
 		feedbacks = feedbacks.filter(item => item.content);
 		if (feedbacks.length) {
@@ -30,8 +57,7 @@ function printResults (product) {
 					if (feedbacks && Array.isArray(feedbacks) && feedbacks.length) {
 						feedbacks = feedbacks.filter(item => item.content && item.content.length >= config.feedbackMinLength);
 						if (feedbacks && feedbacks.length) {
-							console.log('');
-							console.log(key);
+							printByColor('cyan', key);
 							console.log(feedbacks);
 						} else {
 							emptyFeedbacks += 1;
@@ -52,20 +78,10 @@ function printResults (product) {
 			printByColor('cyan', languages[config.language].NO_FEEDBACKS);
 		}
 
-		printFooter (`${product.productId} ${product.title}`);
-
 	} else {
 		console.log('');
 		printByColor('cyan', languages[config.language].NO_FEEDBACKS);
-		printFooter (`${product.productId} ${product.title}`);
 	}
-}
-
-function printFooter (text) {
-	console.log('');
-	console.log('---^-----------');
-	console.log(text);
-	console.log('');
 }
 
 module.exports = printResults;

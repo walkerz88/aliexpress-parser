@@ -27,7 +27,8 @@ module.exports = {
 		PROGRESS_TEXT: 'Загрузка:',
 		GROUP_BY_RATING: 'Оценка:',
 		GROUP_BY_DEFAULT: 'Отзывы:',
-		NO_DATA_FOUND_ERROR: 'Нет данных.'
+		NO_DATA_FOUND_ERROR: 'Нет данных.',
+		NO_INFOTOSHOW_ERROR: 'Переменной infoToShow нет в файле config.js'
 	},
 	'EN': {
 		PRODUCT_ID: 'Product id:',
@@ -53,6 +54,7 @@ module.exports = {
 		PROGRESS_TEXT: 'Progress:',
 		GROUP_BY_RATING: 'Rating:',
 		GROUP_BY_DEFAULT: 'Feedbacks:',
-		NO_DATA_FOUND_ERROR: 'No data found.'
+		NO_DATA_FOUND_ERROR: 'No data found.',
+		NO_INFOTOSHOW_ERROR: 'No infoToShow array in config.js'
 	}
 }

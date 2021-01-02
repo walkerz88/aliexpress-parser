@@ -7,5 +7,43 @@ module.exports = {
     sortLanguage: 'RU',            // language priority in sort RU, EN, FR, etc
     feedbackPages: 10,             // number of feedback pages to fetch, do not use large number or you can be banned
     feedbacksLimit: 10,            // limit per page (total limit = feedbacksLimit * feedbackPages)
-    translate: false               // translate feedbacks (only english language works for now)
+    translate: false,              // translate feedbacks (only english language works for now)
+    infoToShow: [                 
+        'feedbacks',
+        'id',
+        'title',
+        'description',
+        'images',
+        'variants',
+        'specs',
+        'currency',
+        'orders',
+        'ratings',
+        'categoryId',
+        'productId',
+        'totalAvailableQuantity',
+        'storeInfo',
+        'salePrice',
+        'originalPrice'
+    ]
+    /** infoToShow available values
+     * infoToShow: [                 
+        'feedbacks',
+        'id',
+        'title',
+        'description',
+        'images',
+        'variants',
+        'specs',
+        'currency',
+        'orders',
+        'ratings',
+        'categoryId',
+        'productId',
+        'totalAvailableQuantity',
+        'storeInfo',
+        'salePrice',
+        'originalPrice'
+    ]
+     */
 }
