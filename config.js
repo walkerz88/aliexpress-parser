@@ -3,7 +3,7 @@ module.exports = {
     searchByNameMaxResults: 5,     // max results to show in search select results
     searchByNameResultsLength: 64, // if you search product by name, max title length to show in select
     feedbackMinLength: 25,         // min length of feedback text to be in results
-    groupBy: 'language',           // language, rating, null
+    groupBy: 'rating',           // language, rating, null
     sortLanguage: 'RU',            // language priority in sort RU, EN, FR, etc
     feedbackPages: 10,             // number of feedback pages to fetch, do not use large number or you can be banned
     feedbacksLimit: 10,            // limit per page (total limit = feedbacksLimit * feedbackPages)
@@ -13,7 +13,7 @@ module.exports = {
         'productId',
         'title'
     ]
-    /** infoToShow available keys
+    /** infoToShow available values
      * infoToShow: [                 
         'feedbacks',
         'productId',

@@ -6,7 +6,7 @@ const languages = require('../dictionaries/languages');
 config.language = config.language || 'RU';
 config.infoToShow = config.infoToShow || [
 	'feedbacks',
-	'id',
+	'productId',
 	'title'
 ];
 
