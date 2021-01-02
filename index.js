@@ -53,6 +53,7 @@ async function initTool () {
 	}
 }
 
+/** Get by id sequence */
 async function getByIdSequence () {
 	let productId = await prompts({
 		type: 'number',
@@ -77,6 +78,7 @@ async function getByIdSequence () {
 	}
 }
 
+/** Get by name sequence */
 async function getByNameSequence () {
 	let productName = await prompts({
 		type: 'text',
@@ -110,6 +112,7 @@ async function getByNameSequence () {
 	}
 }
 
+/** Restart */
 async function finish () {
 	let finishType = await prompts({
 		type: 'select',
@@ -131,6 +134,7 @@ async function finish () {
 	}
 }
 
+/** Print error */
 function printError (e) {
 	console.log('');
 	if (e && e.message) {
