@@ -29,7 +29,7 @@ async function initTool () {
 	searchType = searchType.value;
 
 	if (!searchType) {
-		printError('No search type received.');
+		printError(languages[config.language].NO_SEARCH_TYPE_ERROR);
 	}
 
 	if (searchType === 'id') {
@@ -64,7 +64,7 @@ async function getByIdSequence () {
 	productId = productId.value;
 
 	if (!productId) {
-		throw new Error('No product id received');
+		throw new Error(languages[config.language].NO_PRODUCT_ID_ERROR);
 	}
 
 	console.log(languages[config.language].FETCHING_IN_PROGRESS);
@@ -88,7 +88,7 @@ async function getByNameSequence () {
 	productName = productName.value;
 
 	if (!productName) {
-		throw new Error('No product name received');
+		throw new Error(languages[config.language].NO_PRODUCT_NAME_ERROR);
 	}
 
 	console.log(languages[config.language].SEARCH_BY_NAME_IN_PROGRESS);

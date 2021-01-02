@@ -20,7 +20,14 @@ module.exports = {
         FINISH_QUESTION: 'Получить данные по другому товару?',
         FINISH_QUESTION_YES: 'Да',
         FINISH_QUESTION_NO: 'Нет',
-        SELECT_PRODUCT: 'Выберите товар:'
+        SELECT_PRODUCT: 'Выберите товар:',
+        NO_SEARCH_TYPE_ERROR: 'Не передан тип поиска.',
+        NO_PRODUCT_ID_ERROR: 'Не передан id товара.',
+        NO_PRODUCT_NAME_ERROR: 'Не передано имя товара.',
+        PROGRESS_TEXT: 'Загрузка:',
+        GROUP_BY_RATING: 'Оценка:',
+        GROUP_BY_DEFAULT: 'Отзывы:',
+        NO_DATA_FOUND_ERROR: 'Нет данных.'
     },
     'EN': {
         PRODUCT_ID: 'Product id:',
@@ -39,6 +46,13 @@ module.exports = {
         FINISH_QUESTION: 'Get another product?',
         FINISH_QUESTION_YES: 'yes',
         FINISH_QUESTION_NO: 'no',
-        SELECT_PRODUCT: 'Select your product:'
+        SELECT_PRODUCT: 'Select your product:',
+        NO_SEARCH_TYPE_ERROR: 'No search type received.',
+        NO_PRODUCT_ID_ERROR: 'No product id received.',
+        NO_PRODUCT_NAME_ERROR: 'No product name received.',
+        PROGRESS_TEXT: 'Progress:',
+        GROUP_BY_RATING: 'Rating:',
+        GROUP_BY_DEFAULT: 'Feedbacks:',
+        NO_DATA_FOUND_ERROR: 'No data found.'
     }
 }

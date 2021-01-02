@@ -3,6 +3,8 @@ const printByColor = require('./printByColor');
 const config = require('../../config');
 const languages = require('../dictionaries/languages');
 
+config.language = config.language || 'RU';
+
 function printResults (product) {
 	let feedbacks = product.feedback;
 	if (feedbacks && Array.isArray(feedbacks) && feedbacks.length) {

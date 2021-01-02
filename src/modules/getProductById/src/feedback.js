@@ -1,9 +1,11 @@
 const fetch = require('node-fetch');
 const cheerio = require('cheerio');
 const faker = require('faker');
+const languages = require('./../../../dictionaries/languages.js');
 let config = require('../../../../config');
 
 config.feedbackPages = config.feedbackPages || 10;
+config.language = config.language || 'RU';
 
 const getFeedbackData = feedbackHtml => {
   const $ = cheerio.load(feedbackHtml);
@@ -88,7 +90,7 @@ module.exports = {
     let totalPages = Math.ceil(count / limit);
     const printProgress = value => {
       process.stdout.write("\r\x1b[K");
-      process.stdout.write(`Progress: ${value}%`);
+      process.stdout.write(`${languages[config.language].PROGRESS_TEXT} ${value}%`);
     }
     let translate = 'N';
 

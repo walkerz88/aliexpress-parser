@@ -1,4 +1,7 @@
 const config = require('../../config');
+const languages = require('../dictionaries/languages.js');
+
+config.language = config.language || 'RU';
 
 function groupResults (array) {
 	let results = {};
@@ -44,13 +47,15 @@ function groupResults (array) {
 						content: item.content
 					}
 				});
-				results[`Rating: ${i}`] = starsArray;
+				results[`${languages[config.language].GROUP_BY_RATING} ${i}`] = starsArray;
 			}
 			break;
 		default:
 			array = array.sort((a, b) => a.content.length - b.content.length);
 			array = array.sort(a => a.country === config.sortLanguage ? 1 : -1);
-			results = {'Feedbacks:': array}
+			results = {
+				[languages[config.language].GROUP_BY_DEFAULT]: array
+			}
 	}
 	return results;
 }

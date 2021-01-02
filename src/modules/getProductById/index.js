@@ -1,8 +1,11 @@
 const puppeteer = require('puppeteer');
 const cheerio = require('cheerio');
-
 const Variants = require('./src/variants');
 const Feedback = require('./src/feedback');
+const languages = require('../../dictionaries/languages.js');
+let config = require('../../../config');
+
+config.sortLanguage = config.sortLanguage || 'RU';
 
 async function getProductById(productId) {
   try {
@@ -106,7 +109,7 @@ async function getProductById(productId) {
 
       return json;
     } else {
-      throw new Error('No data found.')
+      throw new Error(languages[config.language].NO_DATA_FOUND_ERROR);
     }
   } catch (e) {
     throw new Error(e);
