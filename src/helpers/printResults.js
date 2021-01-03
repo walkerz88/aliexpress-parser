@@ -9,21 +9,42 @@ config.infoToShow = config.infoToShow || [
 	'productId',
 	'title'
 ];
+config.showInFeedbacks = config.showInFeedbacks || [
+	'displayName',
+	'country',
+	'rating',
+	'content'
+];
 
 function printResults (product) {
 	const arrayToShow = config.infoToShow;
+
 	if (arrayToShow && Array.isArray(arrayToShow) && arrayToShow.length) {
 		arrayToShow.forEach(key => {
 			if (product[key]) {
-				if (key === 'feedbacks') {
-					console.log('----------');
-					printFeedbacks(product[key]);
-					console.log('');
-				} else {
-					console.log('----------');
-					printByColor('cyan', key);
-					console.log(product[key]);
-					console.log('');
+				switch (key) {
+					case 'feedbacks':
+						console.log('----------');
+						printFeedbacks(product[key]);
+						console.log('');
+						break;
+					case 'description':
+						let html = product[key];
+
+						if (config.stripHtmlFromDescription) {
+							html = html.replace(/<[^>]+>/g, '');
+						}
+	
+						console.log('----------');
+						printByColor('cyan', key);
+						console.log(html);
+						console.log('');
+						break;
+					default:
+						console.log('----------');
+						printByColor('cyan', key);
+						console.log(product[key]);
+						console.log('');
 				}
 			}
 		});
@@ -34,17 +55,11 @@ function printResults (product) {
 }
 
 function printFeedbacks (feedbacks) {
+	const showInFeedbacks = config.showInFeedbacks;
+
 	if (feedbacks && Array.isArray(feedbacks) && feedbacks.length) {
 		feedbacks = feedbacks.filter(item => item.content);
 		if (feedbacks.length) {
-			feedbacks = feedbacks.map(item => {
-				return {
-					rating: item.rating,
-					name: item.displayName || null,
-					country: item.country || null,
-					content: item.content
-				}
-			});
 
 			let results = groupResults(feedbacks);
 
@@ -56,6 +71,21 @@ function printFeedbacks (feedbacks) {
 
 					if (feedbacks && Array.isArray(feedbacks) && feedbacks.length) {
 						feedbacks = feedbacks.filter(item => item.content && item.content.length >= config.feedbackMinLength);
+
+						if (feedbacks && feedbacks.length && showInFeedbacks && Array.isArray(showInFeedbacks) && showInFeedbacks.length) {
+							feedbacks = feedbacks.map(feedback => {
+								let item = {};
+
+								showInFeedbacks.forEach(key => {
+									if (feedback.hasOwnProperty(key)) {
+										item[key] = feedback[key];
+									}
+								});
+
+								return item;
+							});
+						}
+
 						if (feedbacks && feedbacks.length) {
 							printByColor('cyan', key);
 							console.log(feedbacks);

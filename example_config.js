@@ -11,14 +11,8 @@ module.exports = {
     infoToShow: [                 
         'feedbacks',
         'productId',
-        'title'
-    ]
-    /** infoToShow available keys
-     * infoToShow: [                 
-        'feedbacks',
-        'productId',
         'title',
-        'description',
+        /*'description',
         'images',
         'variants',
         'specs',
@@ -30,7 +24,17 @@ module.exports = {
         'totalAvailableQuantity',
         'storeInfo',
         'salePrice',
-        'originalPrice'
+        'originalPrice'*/
+    ],
+    stripHtmlFromDescription: true,  // remove all html tags from product description
+    showInFeedbacks: [
+        'displayName',
+        'country',
+        'rating',
+        'content',
+        /*'info',
+        'date',
+        'photos',
+        'name',*/
     ]
-     */
 }
